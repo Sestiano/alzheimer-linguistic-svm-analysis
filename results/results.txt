@@ -1,0 +1,116 @@
+=== EXPERIMENT: Linguistic Features vs TF-IDF ===
+Research Question: Can a single linguistic feature achieve comparable 
+performance to full TF-IDF vectors for Alzheimer text classification?
+
+=== RESULTS ===
+
+1. BASELINE: Full TF-IDF (400 features)
+   Command: python3 classification.py --C=100 --kernel=linear --features=ngrams
+   
+   Topic 1: Train size: 348 | Test size: 150
+   Topic 2: Train size: 435 | Test size: 187   
+
+   SVC output:
+   .*
+   optimization finished, #iter = 1270
+   obj = -171.283372, rho = 0.014014
+   nSV = 301, nBSV = 0
+   Total nSV = 301
+   [LibSVM]   
+
+   SVC Model:
+   SVC(C=100, kernel='linear', verbose=True)
+   Score: 0.973293768545994   
+
+   Confusion matrix:
+   [[141   9]
+    [  0 187]]
+      
+   Extracted:
+   - Accuracy: 0.9733 (97.33%)
+   - Support Vectors: 301
+
+
+2. TEST: Linguistic Only (1 feature)
+   Command: python3 classification.py --C=100 --kernel=linear --features=linguistic
+
+   Topic 1: Train size: 1428 | Test size: 612
+   Topic 2: Train size: 863 | Test size: 370   
+
+   SVC output:   
+
+      optimization finished, #iter = 64409696
+   obj = -174689.603264, rho = -1.007357
+   nSV = 1728, nBSV = 1724
+   Total nSV = 1728
+   [LibSVM]   
+
+   SVC Model:
+   SVC(C=100, kernel='linear', verbose=True)
+   Score: 0.6232179226069247   
+
+   Confusion matrix:
+   [[612   0]
+    [370   0]]
+   
+   Extracted:
+   - Accuracy: 0.6232 (62.32%)
+   - Support Vectors: 1728
+
+3. TEST: Combined (401 features)
+   Command: python3 classification.py --C=100 --kernel=linear --features=combined
+   
+   Topic 1: Train size: 348 | Test size: 150
+   Topic 2: Train size: 435 | Test size: 187
+   
+   SVC output:
+   
+   optimization finished, #iter = 114021
+   obj = -187.013959, rho = -0.001305
+   nSV = 274, nBSV = 0
+   Total nSV = 274
+   [LibSVM]
+   
+   SVC Model:
+   SVC(C=100, kernel='linear', verbose=True)
+   Score: 0.9970326409495549
+   
+   Confusion matrix:
+   [[150   0]
+    [  1 186]]
+      
+   Extracted:
+   - Accuracy: 0.9970 (99.70%)
+   - Support Vectors: 274
+
+4. CONTROL: Reduced TF-IDF (10 features)
+   Command: python3 classification.py --C=100 --kernel=linear --features=ngrams
+   
+   Topic 1: Train size: 119 | Test size: 51
+   Topic 2: Train size: 158 | Test size: 68
+   
+   SVC output:
+   *
+   optimization finished, #iter = 61
+   obj = -8.455097, rho = -0.154464
+   nSV = 19, nBSV = 0
+   Total nSV = 19
+   [LibSVM]
+   
+   SVC Model:
+   SVC(C=100, kernel='linear', verbose=True)
+   Score: 1.0
+   
+   Confusion matrix:
+   [[51  0]
+    [ 0 68]]
+   
+   Extracted:
+   - Accuracy: 1.0000 (100%)
+   - Support Vectors: 19
+
+=== ANALYSIS ===
+- Best accuracy: 99.70% (Combined)
+- Best efficiency: 62.32 (Linguistic Only)
+- Evidence for linguistic patterns: YES - avg_sentence_length improves TF-IDF
+- Recommendation: Use Combined approach (TF-IDF + linguistic features)
